@@ -11,9 +11,16 @@ pub enum Route {
 impl Route {
     pub fn path(&self) -> String {
         match *self {
-            Self::Stats(StatsInfo { ref username, platform, kind }) => {
-                format!(api!("/stats/{u}/{p}/{k}"), u=username, p=<&str>::from(platform), k=<&str>::from(kind))
-            }
+            Self::Stats(StatsInfo {
+                ref username,
+                platform,
+                kind,
+            }) => format!(
+                api!("/stats/{u}/{p}/{k}"),
+                u = username,
+                p = <&str>::from(platform),
+                k = <&str>::from(kind)
+            ),
         }
     }
 }

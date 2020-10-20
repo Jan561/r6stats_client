@@ -1,5 +1,5 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
-use chrono::{Utc, DateTime};
 
 #[derive(Copy, Clone, Debug)]
 pub enum Kind {

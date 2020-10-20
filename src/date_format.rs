@@ -1,9 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{self, Deserialize, Deserializer};
 
-pub fn deserialize<'de, D>(
-    deserializer: D,
-) -> Result<DateTime<Utc>, D::Error>
+pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
 where
     D: Deserializer<'de>,
 {

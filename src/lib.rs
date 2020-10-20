@@ -1,16 +1,16 @@
 #[macro_use]
 mod macros;
 
+mod date_format;
 pub mod error;
 pub mod platform;
 pub mod routing;
 pub mod stats;
-mod date_format;
 
-use reqwest::{Client as ReqwestClient, ClientBuilder, Url, Method, Response};
 use crate::platform::Platform;
-use crate::stats::{Kind, SeasonalStats};
 use crate::routing::{Route, StatsInfo};
+use crate::stats::{Kind, SeasonalStats};
+use reqwest::{Client as ReqwestClient, ClientBuilder, Method, Response, Url};
 use std::env;
 
 pub struct Client {
@@ -32,10 +32,7 @@ impl Client {
             .build()
             .expect("Cannot create client.");
 
-        Self {
-            client,
-            token,
-        }
+        Self { client, token }
     }
 
     pub async fn stats_seasonal(&self, username: &str, platform: Platform) {
@@ -45,9 +42,14 @@ impl Client {
     }
 
     async fn stats_request(&self, username: &str, platform: Platform, kind: Kind) -> Response {
-        let route = Route::Stats(StatsInfo { username: username.to_string(), platform, kind });
+        let route = Route::Stats(StatsInfo {
+            username: username.to_string(),
+            platform,
+            kind,
+        });
         let url = Url::parse(&route.path()).unwrap();
-        let request = self.client
+        let request = self
+            .client
             .request(Method::GET, url)
             .bearer_auth(&self.token)
             .build()
