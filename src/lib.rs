@@ -1,17 +1,17 @@
 #[macro_use]
 mod macros;
 
-mod date_format;
 pub mod error;
 pub mod platform;
+pub mod regions;
 pub mod routing;
 pub mod stats;
 
 use crate::platform::Platform;
 use crate::routing::{Route, StatsInfo};
-use crate::stats::{Kind, SeasonalStats};
+use crate::stats::seasonal::SeasonalStats;
+use crate::stats::Kind;
 use reqwest::{Client as ReqwestClient, ClientBuilder, Method, Response, Url};
-use std::env;
 
 pub struct Client {
     client: ReqwestClient,
@@ -37,8 +37,9 @@ impl Client {
 
     pub async fn stats_seasonal(&self, username: &str, platform: Platform) {
         let response = self.stats_request(username, platform, Kind::Seasonal).await;
-        let stats: SeasonalStats = response.json().await.unwrap();
-        println!("{:#?}", stats);
+        //println!("{}", response.text().await.unwrap());
+        let _: SeasonalStats = response.json().await.unwrap();
+        //println!("{:#?}", stats);
     }
 
     async fn stats_request(&self, username: &str, platform: Platform, kind: Kind) -> Response {
@@ -60,7 +61,7 @@ impl Client {
 
 #[tokio::test]
 async fn test() {
-    let token = env::var("R6STATS_TOKEN").expect("Cannot find token in env.");
+    let token = std::env::var("R6STATS_TOKEN").expect("Cannot find token in env.");
     let client = Client::new(&token);
-    client.stats_seasonal("Object.L1E", Platform::Pc).await;
+    client.stats_seasonal("pengu.g2", Platform::Pc).await;
 }

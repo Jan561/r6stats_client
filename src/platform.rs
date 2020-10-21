@@ -5,12 +5,12 @@ pub enum Platform {
     Playstation,
 }
 
-impl From<Platform> for &str {
-    fn from(val: Platform) -> &'static str {
-        match val {
-            Platform::Pc => "pc",
-            Platform::Xbox => "xbox",
-            Platform::Playstation => "ps4",
+impl Platform {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Pc => "pc",
+            Self::Xbox => "xbox",
+            Self::Playstation => "ps4",
         }
     }
 }

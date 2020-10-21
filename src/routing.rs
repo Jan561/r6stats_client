@@ -18,8 +18,8 @@ impl Route {
             }) => format!(
                 api!("/stats/{u}/{p}/{k}"),
                 u = username,
-                p = <&str>::from(platform),
-                k = <&str>::from(kind)
+                p = platform.as_str(),
+                k = kind.as_str(),
             ),
         }
     }
