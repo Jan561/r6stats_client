@@ -42,7 +42,7 @@ pub enum Season {
 #[derive(Deserialize_repr, Copy, Clone, Debug)]
 #[repr(u8)]
 pub enum MatchResult {
-    Vacant = 0,
+    NotAvailable = 0,
     Win = 1,
     Loss = 2,
     Abandon = 3,
