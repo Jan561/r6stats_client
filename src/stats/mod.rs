@@ -1,3 +1,4 @@
+pub mod generic;
 pub(crate) mod http;
 pub mod seasonal;
 

@@ -5,35 +5,22 @@ use serde_repr::Deserialize_repr;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[serde(rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum Season {
-    #[serde(rename = "health")]
     Health,
-    #[serde(rename = "blood_orchid")]
     BloodOrchid,
-    #[serde(rename = "white_noise")]
     WhiteNoise,
-    #[serde(rename = "chimera")]
     Chimera,
-    #[serde(rename = "para_bellum")]
     ParaBellum,
-    #[serde(rename = "grim_sky")]
     GrimSky,
-    #[serde(rename = "wind_bastion")]
     WindBastion,
-    #[serde(rename = "burnt_horizon")]
     BurntHorizon,
-    #[serde(rename = "phantom_sight")]
     PhantomSight,
-    #[serde(rename = "ember_rise")]
     EmberRise,
-    #[serde(rename = "shifting_tides")]
     ShiftingTides,
-    #[serde(rename = "void_edge")]
     VoidEdge,
-    #[serde(rename = "steel_wave")]
     SteelWave,
-    #[serde(rename = "shadow_legacy")]
     ShadowLegacy,
     #[serde(other)]
     Unknown,

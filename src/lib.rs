@@ -10,6 +10,7 @@ pub mod stats;
 use crate::error::Error;
 use crate::http::error::{Error as HttpError, Kind as ErrorKind};
 use crate::platform::Platform;
+use crate::stats::generic::GenericStats;
 use crate::stats::http::RouteInfo as StatsInfo;
 use crate::stats::seasonal::SeasonalStats;
 use crate::stats::Kind;
@@ -34,7 +35,19 @@ impl Client {
         Ok(Self { client, token })
     }
 
-    pub async fn stats_seasonal(
+    pub async fn generic_stats(
+        &self,
+        username: &str,
+        platform: Platform,
+    ) -> Result<GenericStats, Error> {
+        let response = self
+            .stats_request(username, platform, Kind::Generic)
+            .await?;
+        let bytes = response.bytes().await?;
+        Ok(serde_json::from_slice(&bytes)?)
+    }
+
+    pub async fn seasonal_stats(
         &self,
         username: &str,
         platform: Platform,
@@ -82,5 +95,8 @@ impl Client {
 async fn test() {
     let token = std::env::var("R6STATS_TOKEN").expect("Cannot find token in env.");
     let client = Client::new(&token).unwrap();
-    let _ = client.stats_seasonal("pengu.g2", Platform::Pc).await;
+    let _ = client
+        .generic_stats("pengu.g2", Platform::Pc)
+        .await
+        .unwrap();
 }
