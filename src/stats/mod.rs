@@ -1,6 +1,10 @@
 pub mod generic;
-pub(crate) mod http;
 pub mod seasonal;
+
+pub(crate) mod http;
+
+pub use generic::GenericStats;
+pub use seasonal::SeasonalStats;
 
 #[derive(Copy, Clone, Debug)]
 #[non_exhaustive]

@@ -1,4 +1,4 @@
-use crate::http::error::{Error as HttpError, Kind};
+use crate::http::{request_error, Error as HttpError};
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
 
@@ -11,10 +11,7 @@ pub enum Error {
 
 impl From<ReqwestError> for Error {
     fn from(e: ReqwestError) -> Self {
-        Self::HttpError(HttpError {
-            url: e.url().map(|u| u.as_str().to_string()),
-            kind: Kind::Request(e),
-        })
+        Self::HttpError(request_error(e))
     }
 }
 

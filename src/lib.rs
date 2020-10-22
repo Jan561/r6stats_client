@@ -2,19 +2,20 @@
 mod macros;
 
 pub mod error;
-mod http;
+pub mod http;
 pub mod platform;
 pub mod regions;
 pub mod stats;
 
-use crate::error::Error;
-use crate::http::error::{Error as HttpError, Kind as ErrorKind};
-use crate::platform::Platform;
-use crate::stats::generic::GenericStats;
+pub use crate::error::Error;
+pub use crate::platform::Platform;
+
+use crate::http::{unsuccessful_request, url_error};
 use crate::stats::http::RouteInfo as StatsInfo;
-use crate::stats::seasonal::SeasonalStats;
+use crate::stats::GenericStats;
 use crate::stats::Kind;
-use reqwest::{Client as ReqwestClient, ClientBuilder, Method, Response, Url};
+use crate::stats::SeasonalStats;
+use reqwest::{Client as ReqwestClient, ClientBuilder, Method, Response, StatusCode, Url};
 
 pub struct Client {
     client: ReqwestClient,
@@ -75,18 +76,20 @@ impl Client {
     }
 
     async fn request(&self, path: &str) -> Result<Response, Error> {
-        let url = Url::parse(path).map_err(|e| {
-            Error::HttpError(HttpError {
-                url: Some(path.to_string()),
-                kind: ErrorKind::UrlError(e),
-            })
-        })?;
-        self.client
+        let url = Url::parse(path).map_err(|e| Error::HttpError(url_error(path, e)))?;
+        let response = self
+            .client
             .request(Method::GET, url)
             .bearer_auth(&self.token)
             .send()
-            .await
-            .map_err(|e| e.into())
+            .await?;
+
+        let status = response.status();
+        if status != StatusCode::OK {
+            return Err(Error::HttpError(unsuccessful_request(path, status)));
+        }
+
+        Ok(response)
     }
 }
 
