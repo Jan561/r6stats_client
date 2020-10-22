@@ -2,13 +2,15 @@
 mod macros;
 
 pub mod error;
+mod http;
 pub mod platform;
 pub mod regions;
-pub mod routing;
 pub mod stats;
 
+use crate::error::Error;
+use crate::http::error::{Error as HttpError, Kind as ErrorKind};
 use crate::platform::Platform;
-use crate::routing::{Route, StatsInfo};
+use crate::stats::http::RouteInfo as StatsInfo;
 use crate::stats::seasonal::SeasonalStats;
 use crate::stats::Kind;
 use reqwest::{Client as ReqwestClient, ClientBuilder, Method, Response, Url};
@@ -19,7 +21,7 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(token: &str) -> Self {
+    pub fn new(token: &str) -> Result<Self, Error> {
         let token = token.trim();
         let token = if token.starts_with("Bearer ") {
             token[7..].to_string()
@@ -27,41 +29,58 @@ impl Client {
             token.to_string()
         };
 
-        let client = ClientBuilder::new()
-            .use_rustls_tls()
-            .build()
-            .expect("Cannot create client.");
+        let client = ClientBuilder::new().use_rustls_tls().build()?;
 
-        Self { client, token }
+        Ok(Self { client, token })
     }
 
-    pub async fn stats_seasonal(&self, username: &str, platform: Platform) {
-        let response = self.stats_request(username, platform, Kind::Seasonal).await;
-        //println!("{}", response.text().await.unwrap());
-        let _: SeasonalStats = response.json().await.unwrap();
-        //println!("{:#?}", stats);
+    pub async fn stats_seasonal(
+        &self,
+        username: &str,
+        platform: Platform,
+    ) -> Result<SeasonalStats, Error> {
+        let response = self
+            .stats_request(username, platform, Kind::Seasonal)
+            .await?;
+        let bytes = response.bytes().await?;
+        Ok(serde_json::from_slice(&bytes)?)
     }
 
-    async fn stats_request(&self, username: &str, platform: Platform, kind: Kind) -> Response {
-        let route = Route::Stats(StatsInfo {
+    async fn stats_request(
+        &self,
+        username: &str,
+        platform: Platform,
+        kind: Kind,
+    ) -> Result<Response, Error> {
+        let path = StatsInfo {
             username: username.to_string(),
             platform,
             kind,
-        });
-        let url = Url::parse(&route.path()).unwrap();
-        let request = self
-            .client
+        }
+        .path();
+        self.request(&path).await
+    }
+
+    async fn request(&self, path: &str) -> Result<Response, Error> {
+        let url = Url::parse(path).map_err(|e| {
+            Error::HttpError(HttpError {
+                url: Some(path.to_string()),
+                kind: ErrorKind::UrlError(e),
+            })
+        })?;
+        self.client
             .request(Method::GET, url)
             .bearer_auth(&self.token)
-            .build()
-            .unwrap();
-        self.client.execute(request).await.unwrap()
+            .send()
+            .await
+            .map_err(|e| e.into())
     }
 }
 
+#[cfg(test)]
 #[tokio::test]
 async fn test() {
     let token = std::env::var("R6STATS_TOKEN").expect("Cannot find token in env.");
-    let client = Client::new(&token);
-    client.stats_seasonal("pengu.g2", Platform::Pc).await;
+    let client = Client::new(&token).unwrap();
+    let _ = client.stats_seasonal("pengu.g2", Platform::Pc).await;
 }

@@ -45,7 +45,7 @@ pub enum MatchResult {
     NotAvailable = 0,
     Win = 1,
     Loss = 2,
-    Abandon = 3,
+    Abandoned = 3,
 }
 
 #[derive(Deserialize, Clone, Debug)]

@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Debug)]
+#[derive(Copy, Clone, Debug)]
 pub enum Platform {
     Pc,
     Xbox,

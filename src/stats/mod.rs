@@ -1,3 +1,4 @@
+pub(crate) mod http;
 pub mod seasonal;
 
 #[derive(Copy, Clone, Debug)]
