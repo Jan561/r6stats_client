@@ -1,4 +1,4 @@
-use crate::regions::Region;
+use crate::region::Region;
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::Deserialize;
 use serde_repr::Deserialize_repr;

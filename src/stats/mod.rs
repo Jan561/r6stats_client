@@ -1,7 +1,10 @@
 pub mod generic;
 pub mod seasonal;
 
+pub mod client;
 pub(crate) mod http;
+
+pub use client::Client;
 
 pub use generic::GenericStats;
 pub use seasonal::SeasonalStats;

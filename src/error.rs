@@ -1,4 +1,4 @@
-use crate::http::{request_error, Error as HttpError};
+use crate::http::error::{request_error, Error as HttpError};
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
 
