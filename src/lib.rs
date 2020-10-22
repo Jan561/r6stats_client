@@ -40,7 +40,7 @@ async fn test() {
     let client = Client::new(&token).unwrap();
     let _ = client
         .stats()
-        .generic("pengu.g2", Platform::Pc)
+        .weapons("pengu.g2", Platform::Pc)
         .await
         .unwrap();
 }
