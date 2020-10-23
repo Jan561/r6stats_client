@@ -1,4 +1,3 @@
-use super::ratelimit::Ratelimit;
 use reqwest::{Error as ReqwestError, StatusCode};
 use url::ParseError;
 
@@ -21,7 +20,6 @@ impl From<ReqwestError> for Error {
 pub enum Kind {
     UnsuccessfulRequest(StatusCode),
     UrlError(ParseError),
-    Ratelimited(Ratelimit),
     Request(ReqwestError),
 }
 
