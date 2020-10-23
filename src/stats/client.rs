@@ -1,7 +1,8 @@
 use super::http::RouteInfo;
-use super::{
-    GenericStats, Kind, OperatorsStats, SeasonalStats, WeaponCategoriesStats, WeaponsStats,
+use super::model::{
+    GenericStats, OperatorsStats, SeasonalStats, WeaponCategoriesStats, WeaponsStats,
 };
+use super::Kind;
 use crate::Http;
 use crate::{Error, Platform};
 use reqwest::Response;

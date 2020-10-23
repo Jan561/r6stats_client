@@ -1,5 +1,6 @@
 pub mod client;
-mod http;
 pub mod model;
+
+mod http;
 
 pub use self::client::Client;
