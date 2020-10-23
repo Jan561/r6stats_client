@@ -7,3 +7,13 @@ pub enum Region {
     Emea,
     Apac,
 }
+
+impl Region {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ncsa => "ncsa",
+            Self::Emea => "emea",
+            Self::Apac => "apac",
+        }
+    }
+}

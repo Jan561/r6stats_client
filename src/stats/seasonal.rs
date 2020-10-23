@@ -41,9 +41,9 @@ pub struct SeasonalStats {
     pub username: String,
     pub platform: String,
     pub ubisoft_id: String,
-    pub uplay_id: String,
-    pub avatar_url_146: String,
-    pub avatar_url_256: String,
+    pub uplay_id: Option<String>,
+    pub avatar_url_146: Option<String>,
+    pub avatar_url_256: Option<String>,
     pub last_updated: DateTime<Utc>,
     pub seasons: HashMap<Season, SeasonInfo>,
 }

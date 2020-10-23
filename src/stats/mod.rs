@@ -5,9 +5,9 @@ pub mod weapon_categories;
 pub mod weapons;
 
 pub mod client;
-pub(crate) mod http;
+mod http;
 
-pub use client::Client;
+pub use self::client::Client;
 
 pub use self::generic::GenericStats;
 pub use self::operators::OperatorsStats;

@@ -2,7 +2,7 @@ use super::http::RouteInfo;
 use super::{
     GenericStats, Kind, OperatorsStats, SeasonalStats, WeaponCategoriesStats, WeaponsStats,
 };
-use crate::http::Http;
+use crate::Http;
 use crate::{Error, Platform};
 use reqwest::Response;
 use std::rc::Rc;
@@ -66,12 +66,12 @@ impl Client {
         platform: Platform,
         kind: Kind,
     ) -> Result<Response, Error> {
-        let path = RouteInfo {
+        let route = RouteInfo {
             username: username.to_string(),
             platform,
             kind,
-        }
-        .path();
+        };
+        let path = route.path();
         self.http.request(&path).await
     }
 }

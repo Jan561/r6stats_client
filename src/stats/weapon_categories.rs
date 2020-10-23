@@ -2,17 +2,20 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct WeaponCategoriesStats {
     pub username: String,
     pub platform: String,
     pub ubisoft_id: String,
-    pub avatar_url_146: String,
-    pub avatar_url_256: String,
+    pub uplay_id: Option<String>,
+    pub avatar_url_146: Option<String>,
+    pub avatar_url_256: Option<String>,
     pub last_updated: DateTime<Utc>,
     pub categories: Vec<CategoriesInfo>,
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct CategoriesInfo {
     pub category: String,
     pub kills: u32,
