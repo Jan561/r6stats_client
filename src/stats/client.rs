@@ -3,17 +3,15 @@ use super::model::{
     GenericStats, OperatorsStats, SeasonalStats, WeaponCategoriesStats, WeaponsStats,
 };
 use super::Kind;
-use crate::Http;
-use crate::{Error, Platform};
+use crate::{Error, Http, Platform, Pointer};
 use reqwest::Response;
-use std::rc::Rc;
 
 pub struct Client {
-    http: Rc<Http>,
+    http: Pointer<Http>,
 }
 
 impl Client {
-    pub(crate) fn new(http: Rc<Http>) -> Self {
+    pub(crate) fn new(http: Pointer<Http>) -> Self {
         Self { http }
     }
 
@@ -73,6 +71,6 @@ impl Client {
             kind,
         };
         let path = route.path();
-        self.http.request(&path).await
+        deref!(self.http).request(&path).await
     }
 }

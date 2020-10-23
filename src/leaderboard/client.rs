@@ -1,15 +1,14 @@
 use super::http::RouteInfo;
 use super::model::Leaderboard;
-use crate::{Error, Http, Platform, Region};
+use crate::{Error, Http, Platform, Pointer, Region};
 use reqwest::Response;
-use std::rc::Rc;
 
 pub struct Client {
-    http: Rc<Http>,
+    http: Pointer<Http>,
 }
 
 impl Client {
-    pub(crate) fn new(http: Rc<Http>) -> Self {
+    pub(crate) fn new(http: Pointer<Http>) -> Self {
         Self { http }
     }
 
@@ -26,6 +25,6 @@ impl Client {
     async fn request(&self, platform: Platform, region: Option<Region>) -> Result<Response, Error> {
         let route = RouteInfo { platform, region };
         let path = route.path();
-        self.http.request(&path).await
+        deref!(self.http).request(&path).await
     }
 }
