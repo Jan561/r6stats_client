@@ -1,11 +1,13 @@
 pub mod error;
-pub(crate) mod ratelimit;
+pub mod ratelimit;
 
 pub use self::ratelimit::Ratelimit;
 
 use self::error::{unsuccessful_request, url_error};
+use self::ratelimit::RatelimitBuilder;
 use crate::Error;
 use reqwest::{Client, ClientBuilder, Method, Response, StatusCode, Url};
+use std::fmt::{self, Debug, Formatter};
 
 pub(crate) struct Http {
     client: Client,
@@ -14,7 +16,7 @@ pub(crate) struct Http {
 }
 
 impl Http {
-    pub fn new(token: &str, ratelimit: Option<u16>) -> Result<Self, Error> {
+    pub fn new(token: &str, limit: Option<u16>) -> Result<Self, Error> {
         let token = token.trim();
         let token = if token.starts_with("Bearer ") {
             token[7..].to_string()
@@ -24,22 +26,30 @@ impl Http {
 
         let client = ClientBuilder::new().use_rustls_tls().build()?;
 
-        let ratelimit = match ratelimit {
-            Some(limit) => Ratelimit::with_limit(limit),
-            None => Ratelimit::new(),
+        let mut ratelimit_builder = RatelimitBuilder::new();
+
+        match limit {
+            Some(limit) => {
+                ratelimit_builder.limit(limit);
+            }
+            None => (),
         };
 
         Ok(Self {
             client,
             token,
-            ratelimit,
+            ratelimit: ratelimit_builder.build(),
         })
     }
 
-    pub async fn request(&mut self, path: &str) -> Result<Response, Error> {
-        let url = Url::parse(path).map_err(|e| Error::HttpError(url_error(path, e)))?;
+    pub fn ratelimit(&self) -> &Ratelimit {
+        &self.ratelimit
+    }
 
-        self.ratelimit.pre_hook().await;
+    pub async fn request(&mut self, path: &str) -> Result<Response, Error> {
+        let url = Url::parse(path).map_err(|e| url_error(path, e))?;
+
+        self.ratelimit.pre_hook(path).await?;
 
         let response = self
             .client
@@ -50,9 +60,18 @@ impl Http {
 
         let status = response.status();
         if status != StatusCode::OK {
-            return Err(Error::HttpError(unsuccessful_request(path, status)));
+            return Err(unsuccessful_request(path, status));
         }
 
         Ok(response)
+    }
+}
+
+impl Debug for Http {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Http")
+            .field("client", &self.client)
+            .field("ratelimit", &self.ratelimit)
+            .finish()
     }
 }

@@ -17,10 +17,13 @@ pub use crate::region::Region;
 pub(crate) use crate::http::Http;
 pub(crate) use crate::pointer::Pointer;
 
+use crate::http::Ratelimit;
 use crate::leaderboard::Client as LeaderboardClient;
 use crate::stats::Client as StatsClient;
 
+#[derive(Clone, Debug)]
 pub struct Client {
+    http: Pointer<Http>,
     stats: StatsClient,
     leaderboard: LeaderboardClient,
 }
@@ -30,9 +33,13 @@ impl Client {
         let http = new_ptr!(Http::new(token, None)?);
 
         let stats = StatsClient::new(http.clone());
-        let leaderboard = LeaderboardClient::new(http);
+        let leaderboard = LeaderboardClient::new(http.clone());
 
-        let s = Self { stats, leaderboard };
+        let s = Self {
+            stats,
+            leaderboard,
+            http,
+        };
         Ok(s)
     }
 
@@ -42,6 +49,10 @@ impl Client {
 
     pub fn leaderboard(&self) -> &LeaderboardClient {
         &self.leaderboard
+    }
+
+    pub async fn ratelimit(&self) -> Ratelimit {
+        deref!(self.http).ratelimit().clone()
     }
 }
 
@@ -54,7 +65,7 @@ async fn test() {
         let _ = client.stats().generic("pengu.g2", Platform::Pc).await;
     }
 
-    let response = client.stats().generic("pengu.g2", Platform::Pc).await;
+    let response = block!(client.stats().generic("pengu.g2", Platform::Pc).await);
 
     println!("{:?}", response);
 }

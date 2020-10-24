@@ -6,6 +6,7 @@ use super::Kind;
 use crate::{Error, Http, Platform, Pointer};
 use reqwest::Response;
 
+#[derive(Clone, Debug)]
 pub struct Client {
     http: Pointer<Http>,
 }
@@ -71,6 +72,6 @@ impl Client {
             kind,
         };
         let path = route.path();
-        deref!(self.http).request(&path).await
+        deref_mut!(self.http).request(&path).await
     }
 }

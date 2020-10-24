@@ -3,6 +3,7 @@ use super::model::Leaderboard;
 use crate::{Error, Http, Platform, Pointer, Region};
 use reqwest::Response;
 
+#[derive(Clone, Debug)]
 pub struct Client {
     http: Pointer<Http>,
 }
@@ -25,6 +26,6 @@ impl Client {
     async fn request(&self, platform: Platform, region: Option<Region>) -> Result<Response, Error> {
         let route = RouteInfo { platform, region };
         let path = route.path();
-        deref!(self.http).request(&path).await
+        deref_mut!(self.http).request(&path).await
     }
 }

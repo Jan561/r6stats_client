@@ -11,7 +11,7 @@ pub enum Error {
 
 impl From<ReqwestError> for Error {
     fn from(e: ReqwestError) -> Self {
-        Self::HttpError(request_error(e))
+        request_error(e)
     }
 }
 
