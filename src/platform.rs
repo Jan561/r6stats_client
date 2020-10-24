@@ -1,4 +1,6 @@
-/// The supported platforms.
+//! The platforms of Rainbow 6 Siege.
+
+/// The platforms on which Rainbow 6 Siege can be played.
 #[derive(Copy, Clone, Debug)]
 pub enum Platform {
     Pc,
@@ -7,6 +9,7 @@ pub enum Platform {
 }
 
 impl Platform {
+    /// Returns the string representation for the api.
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Pc => "pc",

@@ -1,3 +1,5 @@
+//! The stats endpoint of the api.
+
 pub mod client;
 pub mod model;
 

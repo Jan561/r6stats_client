@@ -1,3 +1,5 @@
+//! Module containing HTTP-related errors.
+
 use crate::Error as CrateError;
 use reqwest::{Error as ReqwestError, StatusCode};
 use url::ParseError;

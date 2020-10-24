@@ -1,3 +1,5 @@
+//! HTTP module which provides functions for performing requests to the R6Stats endpoints.
+
 pub mod error;
 pub mod ratelimit;
 

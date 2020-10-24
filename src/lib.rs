@@ -90,17 +90,3 @@ impl Client {
         deref!(self.http).ratelimit().clone()
     }
 }
-
-#[cfg(test)]
-#[tokio::test]
-async fn test() {
-    let token = std::env::var("R6STATS_TOKEN").expect("Cannot find token in env.");
-    let client = Client::new(&token).unwrap();
-    for _ in 0..60 {
-        let _ = client.stats().generic("pengu.g2", Platform::Pc).await;
-    }
-
-    let response = client.stats().generic("pengu.g2", Platform::Pc).await;
-
-    println!("{:?}", response);
-}

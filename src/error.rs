@@ -1,7 +1,10 @@
+//! Module containing crate errors.
+
 use crate::http::error::{request_error, Error as HttpError};
 use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
 
+/// Enum containing all errors.
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum Error {

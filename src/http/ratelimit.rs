@@ -1,3 +1,5 @@
+//! Module for ratelimiting requests before sending them.
+
 use crate::Error;
 use std::time::{Duration, SystemTime};
 use tokio::time::delay_for;
@@ -5,12 +7,16 @@ use tokio::time::delay_for;
 const DEFAULT_RATE_LIMIT: u16 = 60;
 const DEFAULT_INTERVAL: Duration = Duration::from_secs(60);
 
+/// The builder for [`Ratelimit`].
+///
+/// [`Ratelimit`]: struct.Ratelimit.html
 pub struct RatelimitBuilder {
     limit: Option<u16>,
     interval: Option<Duration>,
 }
 
 impl RatelimitBuilder {
+    /// Returns a new builder.
     pub fn new() -> Self {
         Self {
             limit: None,
@@ -18,16 +24,29 @@ impl RatelimitBuilder {
         }
     }
 
+    /// Sets the [`limit`] of the [`Ratelimit`].
+    ///
+    /// Set to `0` to disable ratelimiting.
+    ///
+    /// [`limit`]: struct.Ratelimit.html#method.limit
+    /// [`Ratelimit`]: struct.Ratelimit.html
     pub fn limit(&mut self, limit: u16) -> &mut Self {
         self.limit = Some(limit);
         self
     }
 
+    /// Sets the [`interval`] of the [`Ratelimit`].
+    ///
+    /// [`interval`]: struct.Ratelimit.html#method.interval
+    /// [`Ratelimit`]: struct.Ratelimit.html.
     pub fn interval(&mut self, interval: Duration) -> &mut Self {
         self.interval = Some(interval);
         self
     }
 
+    /// Returns the finished [`Ratelimit`].
+    ///
+    /// [`Ratelimit`]: struct.Ratelimit.html
     pub fn build(self) -> Ratelimit {
         let limit = self.limit.unwrap_or(DEFAULT_RATE_LIMIT);
         Ratelimit {
@@ -67,6 +86,7 @@ impl Ratelimit {
         self.remaining
     }
 
+    /// The ratelimit interval.
     pub fn interval(&self) -> Duration {
         self.interval
     }

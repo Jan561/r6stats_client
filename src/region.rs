@@ -1,14 +1,16 @@
+//! The regions in Rainbow 6 Siege.
+
 use serde::Deserialize;
 
 /// The regions
 #[derive(Deserialize, Copy, Clone, Debug, PartialEq, Eq, Hash)]
 #[serde(rename_all = "snake_case")]
 pub enum Region {
-    /// US, Latin America
+    /// US East, US West, US Central, US South Central, Brazil South
     Ncsa,
-    /// Europe
+    /// EU West, EU North
     Emea,
-    /// Asia, Australia
+    /// Asia East, Asia SouthEast, Australia East
     Apac,
 }
 
