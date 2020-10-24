@@ -4,6 +4,7 @@ use std::time::Duration;
 use url::ParseError;
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct Error {
     pub url: Option<String>,
     pub kind: Kind,
@@ -19,6 +20,7 @@ impl From<ReqwestError> for Error {
 }
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Kind {
     UnsuccessfulRequest(StatusCode),
     UrlError(ParseError),

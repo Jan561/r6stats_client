@@ -3,6 +3,7 @@ use reqwest::Error as ReqwestError;
 use serde_json::Error as JsonError;
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum Error {
     HttpError(HttpError),
     JsonError(JsonError),
