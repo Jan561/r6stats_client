@@ -4,7 +4,6 @@ pub mod ratelimit;
 pub use self::ratelimit::Ratelimit;
 
 use self::error::{unsuccessful_request, url_error};
-use self::ratelimit::RatelimitBuilder;
 use crate::Error;
 use reqwest::{Client, ClientBuilder, Method, Response, StatusCode, Url};
 use std::fmt::{self, Debug, Formatter};
@@ -16,7 +15,7 @@ pub(crate) struct Http {
 }
 
 impl Http {
-    pub fn new(token: &str, limit: Option<u16>) -> Result<Self, Error> {
+    pub fn new(token: &str, ratelimit: Ratelimit) -> Result<Self, Error> {
         let token = token.trim();
         let token = if token.starts_with("Bearer ") {
             token[7..].to_string()
@@ -26,19 +25,10 @@ impl Http {
 
         let client = ClientBuilder::new().use_rustls_tls().build()?;
 
-        let mut ratelimit_builder = RatelimitBuilder::new();
-
-        match limit {
-            Some(limit) => {
-                ratelimit_builder.limit(limit);
-            }
-            None => (),
-        };
-
         Ok(Self {
             client,
             token,
-            ratelimit: ratelimit_builder.build(),
+            ratelimit,
         })
     }
 

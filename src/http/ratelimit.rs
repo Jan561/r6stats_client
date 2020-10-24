@@ -76,7 +76,7 @@ impl Ratelimit {
         let delay = match self.reset_in() {
             Some(delay) => delay,
             None => {
-                // Ratelimit
+                // Ratelimit reset time in the past
                 self.remaining = self.limit - 1;
                 self.reset_at = Some(SystemTime::now() + self.interval);
 

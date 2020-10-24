@@ -20,6 +20,7 @@ pub(crate) use crate::pointer::Pointer;
 use crate::http::Ratelimit;
 use crate::leaderboard::Client as LeaderboardClient;
 use crate::stats::Client as StatsClient;
+use crate::http::ratelimit::RatelimitBuilder;
 
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -29,8 +30,8 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(token: &str) -> Result<Self, Error> {
-        let http = new_ptr!(Http::new(token, None)?);
+    fn _new(token: &str, ratelimit: Ratelimit) -> Result<Self, Error> {
+        let http = new_ptr!(Http::new(token, ratelimit)?);
 
         let stats = StatsClient::new(http.clone());
         let leaderboard = LeaderboardClient::new(http.clone());
@@ -41,6 +42,22 @@ impl Client {
             http,
         };
         Ok(s)
+
+    }
+
+    pub fn new(token: &str) -> Result<Self, Error> {
+        Self::_new(token, Ratelimit::default())
+    }
+
+    pub fn with_ratelimit<F>(token: &str, op: F) -> Result<Self, Error>
+    where
+        F: FnOnce(&mut RatelimitBuilder) -> &mut RatelimitBuilder,
+    {
+        let mut builder = RatelimitBuilder::new();
+        op(&mut builder);
+        let ratelimit = builder.build();
+
+        Self::_new(token, ratelimit)
     }
 
     pub fn stats(&self) -> &StatsClient {
