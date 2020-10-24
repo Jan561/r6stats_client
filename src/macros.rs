@@ -1,15 +1,14 @@
 #[macro_export]
 macro_rules! block {
     ($e:expr) => {
-        match $e {
-            Err($crate::Error::HttpError($crate::http::error::Error {
-                kind: $crate::http::error::Kind::PreRatelimited(duration),
-                ..
-            })) => {
-                tokio::time::delay_for(duration).await;
-                $e
+        loop {
+            match $e {
+                Err($crate::Error::HttpError($crate::http::error::Error {
+                    kind: $crate::http::error::Kind::PreRatelimited(duration),
+                    ..
+                })) => tokio::time::delay_for(duration).await,
+                res @ _ => break res,
             }
-            res @ _ => res,
         }
     };
 }
