@@ -82,7 +82,7 @@ async fn test() {
         let _ = client.stats().generic("pengu.g2", Platform::Pc).await;
     }
 
-    let response = block!(client.stats().generic("pengu.g2", Platform::Pc).await);
+    let response = client.stats().generic("pengu.g2", Platform::Pc).await;
 
     println!("{:?}", response);
 }

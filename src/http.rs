@@ -39,7 +39,7 @@ impl Http {
     pub async fn request(&mut self, path: &str) -> Result<Response, Error> {
         let url = Url::parse(path).map_err(|e| url_error(path, e))?;
 
-        self.ratelimit.pre_hook(path).await?;
+        self.ratelimit.pre_hook().await?;
 
         let response = self
             .client

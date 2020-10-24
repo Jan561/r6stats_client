@@ -1,6 +1,6 @@
-use crate::http::error::ratelimited_error;
 use crate::Error;
 use std::time::{Duration, SystemTime};
+use tokio::time::delay_for;
 
 const DEFAULT_RATE_LIMIT: u16 = 60;
 const DEFAULT_INTERVAL: Duration = Duration::from_secs(60);
@@ -68,7 +68,7 @@ impl Ratelimit {
         self.reset_at?.duration_since(SystemTime::now()).ok()
     }
 
-    pub(super) async fn pre_hook(&mut self, url: &str) -> Result<(), Error> {
+    pub(super) async fn pre_hook(&mut self) -> Result<(), Error> {
         if self.limit == 0 {
             return Ok(());
         }
@@ -85,7 +85,8 @@ impl Ratelimit {
         };
 
         if self.remaining == 0 {
-            return Err(ratelimited_error(url, delay));
+            delay_for(delay).await;
+            return Ok(());
         }
 
         self.remaining -= 1;
