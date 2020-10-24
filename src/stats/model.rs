@@ -1,3 +1,5 @@
+//! Models for stats endpoint.
+
 pub mod generic;
 pub mod operators;
 pub mod seasonal;

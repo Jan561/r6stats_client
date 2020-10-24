@@ -1,3 +1,5 @@
+//! Models for leaderboard endpoint.
+
 use serde::Deserialize;
 
 /// The leaderboard

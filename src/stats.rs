@@ -1,12 +1,13 @@
 //! The stats endpoint of the api.
 
-pub mod client;
 pub mod model;
 
+mod client;
 mod http;
 
 pub use self::client::Client;
 
+/// Type of stats to request.
 #[derive(Copy, Clone, Debug)]
 #[non_exhaustive]
 pub enum Kind {
