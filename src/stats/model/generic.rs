@@ -3,6 +3,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct GenericStats {
     pub username: String,
     pub platform: String,
@@ -17,12 +18,14 @@ pub struct GenericStats {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct Alias {
     pub username: String,
     pub last_seen_at: DateTime<Utc>,
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct Progression {
     pub level: u16,
     pub lootbox_probability: f32,
@@ -30,6 +33,7 @@ pub struct Progression {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct Stats {
     pub general: GeneralStats,
     pub queue: HashMap<QueueMode, QueueInfo>,
@@ -38,6 +42,7 @@ pub struct Stats {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct GeneralStats {
     pub assists: u32,
     pub barricades_deployed: u16,
@@ -75,6 +80,7 @@ pub enum QueueMode {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct QueueInfo {
     pub deaths: u32,
     pub draws: u16,
@@ -95,6 +101,7 @@ pub struct Gamemode {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct BombInfo {
     pub best_score: u16,
     pub games_played: u16,
@@ -105,6 +112,7 @@ pub struct BombInfo {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct SecureAreaInfo {
     pub best_score: u16,
     pub games_played: u16,
@@ -118,6 +126,7 @@ pub struct SecureAreaInfo {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct HostageInfo {
     pub best_score: u16,
     pub games_played: u16,
@@ -129,6 +138,7 @@ pub struct HostageInfo {
 }
 
 #[derive(Deserialize, Clone, Debug)]
+#[non_exhaustive]
 pub struct Timestamps {
     pub created: DateTime<Utc>,
     pub last_updated: DateTime<Utc>,
