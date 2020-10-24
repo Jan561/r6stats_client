@@ -20,7 +20,5 @@ pub use crate::region::Region;
 pub(crate) use crate::http::Http;
 pub(crate) use crate::pointer::Pointer;
 
-use crate::http::ratelimit::RatelimitBuilder;
-use crate::http::Ratelimit;
 use crate::leaderboard::Client as LeaderboardClient;
 use crate::stats::Client as StatsClient;
