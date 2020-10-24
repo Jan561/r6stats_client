@@ -34,23 +34,30 @@ impl RatelimitBuilder {
             limit,
             remaining: limit,
             interval: self.interval.unwrap_or(DEFAULT_INTERVAL),
-            reset_at: None,
+            reset_at: SystemTime::now(),
         }
     }
 }
 
+/// Handles ratelimiting.
+///
+/// When a request exceeds the limit, it will be delayed until next [`reset`].
+///
+/// [`reset`]: struct.Ratelimit.html#method.reset_at
 #[derive(Clone, Debug)]
 pub struct Ratelimit {
     limit: u16,
     remaining: u16,
     interval: Duration,
-    reset_at: Option<SystemTime>,
+    reset_at: SystemTime,
 }
 
 impl Ratelimit {
-    /// The total number of requests that can be made within 60 seconds.
+    /// The total number of requests that can be made within the [`interval`].
     ///
-    /// `0` if not rate-limited
+    /// Returns `0` if not ratelimited.
+    ///
+    /// [`interval`]: struct.Ratelimit.html#method.interval
     pub fn limit(&self) -> u16 {
         self.limit
     }
@@ -60,12 +67,20 @@ impl Ratelimit {
         self.remaining
     }
 
-    pub fn reset_at(&self) -> Option<SystemTime> {
+    pub fn interval(&self) -> Duration {
+        self.interval
+    }
+
+    /// The absolute time at which the ratelimit resets.
+    pub fn reset_at(&self) -> SystemTime {
         self.reset_at
     }
 
+    /// The duration from now in which the ratelimit resets.
+    ///
+    /// Returns `None` if the reset time is in the past.
     pub fn reset_in(&self) -> Option<Duration> {
-        self.reset_at?.duration_since(SystemTime::now()).ok()
+        self.reset_at.duration_since(SystemTime::now()).ok()
     }
 
     pub(super) async fn pre_hook(&mut self) -> Result<(), Error> {
@@ -78,7 +93,7 @@ impl Ratelimit {
             None => {
                 // Ratelimit reset time in the past
                 self.remaining = self.limit - 1;
-                self.reset_at = Some(SystemTime::now() + self.interval);
+                self.reset_at = SystemTime::now() + self.interval;
 
                 return Ok(());
             }

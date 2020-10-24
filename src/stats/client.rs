@@ -6,6 +6,7 @@ use super::Kind;
 use crate::{Error, Http, Platform, Pointer};
 use reqwest::Response;
 
+/// Client for the stats endpoint.
 #[derive(Clone, Debug)]
 pub struct Client {
     http: Pointer<Http>,
@@ -16,12 +17,28 @@ impl Client {
         Self { http }
     }
 
+    /// Returns the generic stats of a player.
+    ///
+    /// # Args
+    ///
+    /// - `username` - The username of the player
+    /// - `platform` - The [`Platform`] of the player
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn generic(&self, username: &str, platform: Platform) -> Result<GenericStats, Error> {
         let response = self.request(username, platform, Kind::Generic).await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
     }
 
+    /// Returns the generic stats of a player.
+    ///
+    /// # Args
+    ///
+    /// - `username` - The username of the player
+    /// - `platform` - The [`Platform`] of the player
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn seasonal(
         &self,
         username: &str,
@@ -32,6 +49,14 @@ impl Client {
         Ok(serde_json::from_slice(&bytes)?)
     }
 
+    /// Returns the operator stats of a player.
+    ///
+    /// # Args
+    ///
+    /// - `username` - The username of the player
+    /// - `platform` - The [`Platform`] of the player
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn operators(
         &self,
         username: &str,
@@ -42,6 +67,14 @@ impl Client {
         Ok(serde_json::from_slice(&bytes)?)
     }
 
+    /// Returns the weapon-category stats of a player.
+    ///
+    /// # Args
+    ///
+    /// - `username` - The username of the player
+    /// - `platform` - The [`Platform`] of the player
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn weapon_categories(
         &self,
         username: &str,
@@ -54,6 +87,14 @@ impl Client {
         Ok(serde_json::from_slice(&bytes)?)
     }
 
+    /// Returns the weapon stats of a player.
+    ///
+    /// # Args
+    ///
+    /// - `username` - The username of the player
+    /// - `platform` - The [`Platform`] of the player
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn weapons(&self, username: &str, platform: Platform) -> Result<WeaponsStats, Error> {
         let response = self.request(username, platform, Kind::Weapons).await?;
         let bytes = response.bytes().await?;

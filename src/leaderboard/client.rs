@@ -3,6 +3,7 @@ use super::model::Leaderboard;
 use crate::{Error, Http, Platform, Pointer, Region};
 use reqwest::Response;
 
+/// Client for the leaderboard endpoint.
 #[derive(Clone, Debug)]
 pub struct Client {
     http: Pointer<Http>,
@@ -13,6 +14,15 @@ impl Client {
         Self { http }
     }
 
+    /// Gets the current leaderboard.
+    ///
+    /// # Args
+    ///
+    /// - `platform`: The [`Platform`] for the leaderboard
+    /// - `region`: Optionally filter for a [`Region`]
+    ///
+    /// [`Platform`]: ../../platform/enum.Platform.html
+    /// [`Region`]: ../../region/enum.Region.html
     pub async fn get(
         &self,
         platform: Platform,

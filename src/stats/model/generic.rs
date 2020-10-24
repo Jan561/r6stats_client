@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// Deserialized generic stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct GenericStats {
@@ -17,6 +18,7 @@ pub struct GenericStats {
     pub stats: Stats,
 }
 
+/// Deserialized aliases.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Alias {
@@ -24,6 +26,7 @@ pub struct Alias {
     pub last_seen_at: DateTime<Utc>,
 }
 
+/// Deserialized progression.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Progression {
@@ -32,6 +35,7 @@ pub struct Progression {
     pub total_xp: u32,
 }
 
+/// Deserialized stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Stats {
@@ -41,6 +45,7 @@ pub struct Stats {
     pub timestamps: Timestamps,
 }
 
+/// Deserialized general stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct GeneralStats {
@@ -70,15 +75,22 @@ pub struct GeneralStats {
     pub wl: f32,
 }
 
+/// The queue type.
 #[derive(Deserialize, Copy, Clone, Debug, PartialEq, Eq, Hash)]
 #[serde(rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum QueueMode {
+    /// Casual Queue
     Casual,
+    /// Ranked Queue
     Ranked,
+    /// Unranked Queue and other
     Other,
 }
 
+/// Deserialized info for the [`QueueMode`].
+///
+/// [`QueueMode`]: enum.QueueMode.html
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct QueueInfo {
@@ -93,6 +105,7 @@ pub struct QueueInfo {
     pub wl: f32,
 }
 
+/// Deserialized gamemodes.
 #[derive(Deserialize, Clone, Debug)]
 pub struct Gamemode {
     pub bomb: BombInfo,
@@ -100,6 +113,7 @@ pub struct Gamemode {
     pub hostage: HostageInfo,
 }
 
+/// Deserialized info for bomb gamemode.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct BombInfo {
@@ -111,6 +125,7 @@ pub struct BombInfo {
     pub wl: f32,
 }
 
+/// Deserialized info for secure area gamemode.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct SecureAreaInfo {
@@ -125,6 +140,7 @@ pub struct SecureAreaInfo {
     pub wl: f32,
 }
 
+/// Deserialized info for hostage gamemode.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct HostageInfo {
@@ -137,6 +153,7 @@ pub struct HostageInfo {
     pub wl: f32,
 }
 
+/// Deserialized timestamps.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Timestamps {

@@ -1,3 +1,4 @@
+/// The supported platforms.
 #[derive(Copy, Clone, Debug)]
 pub enum Platform {
     Pc,

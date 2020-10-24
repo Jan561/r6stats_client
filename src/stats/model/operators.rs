@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
+/// Deserialized operator stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct OperatorsStats {
@@ -11,12 +12,13 @@ pub struct OperatorsStats {
     pub avatar_url_146: Option<String>,
     pub avatar_url_256: Option<String>,
     pub last_updated: DateTime<Utc>,
-    pub operators: Vec<OperatorsInfo>,
+    pub operators: Vec<OperatorInfo>,
 }
 
+/// Deserialized operator info.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
-pub struct OperatorsInfo {
+pub struct OperatorInfo {
     pub name: String,
     pub ctu: String,
     pub role: String,
@@ -31,13 +33,14 @@ pub struct OperatorsInfo {
     pub melee_kills: u16,
     pub experience: usize,
     pub playtime: usize,
-    pub abilities: Option<Vec<AbilitiesInfo>>,
+    pub abilities: Option<Vec<AbilityInfo>>,
     pub badge_image: Option<String>,
 }
 
+/// Deserialized ability info.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
-pub struct AbilitiesInfo {
+pub struct AbilityInfo {
     pub ability: String,
     pub value: Option<u16>,
 }

@@ -1,12 +1,15 @@
 use serde::Deserialize;
 
+/// The leaderboard
 #[derive(Deserialize, Clone, Debug)]
 #[serde(transparent)]
 #[non_exhaustive]
 pub struct Leaderboard {
+    /// Players in the leaderboard, sorted ascending
     pub players: Vec<Player>,
 }
 
+/// Deserialized player.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Player {
@@ -21,6 +24,7 @@ pub struct Player {
     pub position: u16,
 }
 
+/// Deserialized stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct Stats {

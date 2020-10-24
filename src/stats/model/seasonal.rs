@@ -4,6 +4,7 @@ use serde::Deserialize;
 use serde_repr::Deserialize_repr;
 use std::collections::HashMap;
 
+/// All seasons returned by the api.
 #[derive(Deserialize, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[serde(rename_all = "snake_case")]
 #[non_exhaustive]
@@ -22,10 +23,12 @@ pub enum Season {
     VoidEdge,
     SteelWave,
     ShadowLegacy,
+    /// For new seasons not yet implemented in this client.
     #[serde(other)]
     Unknown,
 }
 
+/// The match result.
 #[derive(Deserialize_repr, Copy, Clone, Debug)]
 #[repr(u8)]
 pub enum MatchResult {
@@ -35,6 +38,7 @@ pub enum MatchResult {
     Abandoned = 3,
 }
 
+/// Deserialized seasonal stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct SeasonalStats {
@@ -48,6 +52,7 @@ pub struct SeasonalStats {
     pub seasons: HashMap<Season, SeasonInfo>,
 }
 
+/// Deserialized season info.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct SeasonInfo {
@@ -57,6 +62,7 @@ pub struct SeasonInfo {
     pub regions: HashMap<Region, Vec<RegionInfo>>,
 }
 
+/// Deserialized region info.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct RegionInfo {

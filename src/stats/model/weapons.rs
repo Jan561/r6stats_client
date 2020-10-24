@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
+/// Deserialized weapon stats.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct WeaponsStats {
@@ -14,6 +15,7 @@ pub struct WeaponsStats {
     pub weapons: Vec<WeaponsInfo>,
 }
 
+/// Deserialized weapon info.
 #[derive(Deserialize, Clone, Debug)]
 #[non_exhaustive]
 pub struct WeaponsInfo {
