@@ -11,17 +11,17 @@ macro_rules! deref {
     };
 }
 
-#[cfg(not(feature = "threadsafe"))]
-macro_rules! deref_mut {
-    ($e:expr) => {
-        $e.borrow_mut()
-    };
-}
-
 #[cfg(feature = "threadsafe")]
 macro_rules! deref {
     ($e:expr) => {
         $e.read().await
+    };
+}
+
+#[cfg(not(feature = "threadsafe"))]
+macro_rules! deref_mut {
+    ($e:expr) => {
+        $e.borrow_mut()
     };
 }
 
