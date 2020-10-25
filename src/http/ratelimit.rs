@@ -1,7 +1,7 @@
 //! Module for ratelimiting requests before sending them.
 
 use crate::Error;
-use tokio::time::{delay_until, Duration, Instant};
+use tokio::time::{sleep_until, Duration, Instant};
 
 const DEFAULT_RATE_LIMIT: u16 = 60;
 const DEFAULT_INTERVAL: Duration = Duration::from_secs(60);
@@ -113,7 +113,7 @@ impl Ratelimit {
         }
 
         if self.remaining == 0 {
-            delay_until(self.reset_at).await;
+            sleep_until(self.reset_at).await;
             return Ok(());
         }
 
