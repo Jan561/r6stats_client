@@ -1,7 +1,7 @@
 [package]
 name = "r6stats_client"
 version = "0.1.0"
-authors = ["Jan Adä"]
+authors = ["Jan Adä <jan561.github@gmail.com>"]
 edition = "2018"
 description = "Client for the R6Stats API"
 readme = "README.md"
