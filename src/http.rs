@@ -1,9 +1,10 @@
 //! HTTP module which provides functions for performing requests to the R6Stats endpoints.
 
 pub mod error;
-pub mod ratelimit;
 
-pub use self::ratelimit::Ratelimit;
+mod ratelimit;
+
+pub use self::ratelimit::{Ratelimit, RatelimitBuilder};
 
 use self::error::{unsuccessful_request, url_error};
 use crate::pointer::Cell;

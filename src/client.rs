@@ -1,8 +1,7 @@
 //! Module containing the client.
 
 use super::{LeaderboardClient, StatsClient};
-use crate::http::ratelimit::RatelimitBuilder;
-use crate::http::Ratelimit;
+use crate::http::{Ratelimit, RatelimitBuilder};
 use crate::{Error, Http, Pointer};
 
 /// Client for the R6Stats-API.

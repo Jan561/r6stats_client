@@ -15,7 +15,7 @@ pub enum Region {
 }
 
 impl Region {
-    /// Returns the string representation of the region in the api.
+    /// Returns the string representation for the api.
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Ncsa => "ncsa",
