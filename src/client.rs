@@ -17,7 +17,7 @@ pub struct Client {
 
 impl Client {
     fn _new(token: &str, ratelimit: Ratelimit) -> Result<Self, Error> {
-        let http = new_ptr!(Http::new(token, ratelimit)?);
+        let http = Pointer::new(Http::new(token, ratelimit)?);
 
         let stats = StatsClient::new(http.clone());
         let leaderboard = LeaderboardClient::new(http.clone());
@@ -70,6 +70,6 @@ impl Client {
 
     /// Returns the current ratelimit.
     pub async fn ratelimit(&self) -> Ratelimit {
-        deref!(self.http).ratelimit().clone()
+        self.http.ratelimit().await
     }
 }

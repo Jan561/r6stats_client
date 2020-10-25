@@ -1,8 +1,7 @@
 //! Module for ratelimiting requests before sending them.
 
 use crate::Error;
-use std::time::{Duration, SystemTime};
-use tokio::time::delay_for;
+use tokio::time::{sleep_until, Duration, Instant};
 
 const DEFAULT_RATE_LIMIT: u16 = 60;
 const DEFAULT_INTERVAL: Duration = Duration::from_secs(60);
@@ -53,7 +52,7 @@ impl RatelimitBuilder {
             limit,
             remaining: limit,
             interval: self.interval.unwrap_or(DEFAULT_INTERVAL),
-            reset_at: SystemTime::now(),
+            reset_at: Instant::now(),
         }
     }
 }
@@ -68,7 +67,7 @@ pub struct Ratelimit {
     limit: u16,
     remaining: u16,
     interval: Duration,
-    reset_at: SystemTime,
+    reset_at: Instant,
 }
 
 impl Ratelimit {
@@ -92,7 +91,7 @@ impl Ratelimit {
     }
 
     /// The absolute time at which the ratelimit resets.
-    pub fn reset_at(&self) -> SystemTime {
+    pub fn reset_at(&self) -> Instant {
         self.reset_at
     }
 
@@ -100,7 +99,7 @@ impl Ratelimit {
     ///
     /// Returns `None` if the reset time is in the past.
     pub fn reset_in(&self) -> Option<Duration> {
-        self.reset_at.duration_since(SystemTime::now()).ok()
+        self.reset_at.checked_duration_since(Instant::now())
     }
 
     pub(super) async fn pre_hook(&mut self) -> Result<(), Error> {
@@ -108,19 +107,13 @@ impl Ratelimit {
             return Ok(());
         }
 
-        let delay = match self.reset_in() {
-            Some(delay) => delay,
-            None => {
-                // Ratelimit reset time in the past
-                self.remaining = self.limit - 1;
-                self.reset_at = SystemTime::now() + self.interval;
-
-                return Ok(());
-            }
-        };
+        if Instant::now() > self.reset_at {
+            self.remaining = self.limit - 1;
+            return Ok(());
+        }
 
         if self.remaining == 0 {
-            delay_for(delay).await;
+            sleep_until(self.reset_at).await;
             return Ok(());
         }
 

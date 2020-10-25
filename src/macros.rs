@@ -5,20 +5,6 @@ macro_rules! api {
 }
 
 #[cfg(not(feature = "threadsafe"))]
-macro_rules! new_ptr {
-    ($e:expr) => {
-        crate::Pointer::new(std::cell::RefCell::new($e))
-    };
-}
-
-#[cfg(feature = "threadsafe")]
-macro_rules! new_ptr {
-    ($e:expr) => {
-        crate::Pointer::new(tokio::sync::RwLock::new($e))
-    };
-}
-
-#[cfg(not(feature = "threadsafe"))]
 macro_rules! deref {
     ($e:expr) => {
         $e.borrow()

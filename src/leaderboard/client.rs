@@ -36,6 +36,6 @@ impl Client {
     async fn request(&self, platform: Platform, region: Option<Region>) -> Result<Response, Error> {
         let route = RouteInfo { platform, region };
         let path = route.path();
-        deref_mut!(self.http).request(&path).await
+        self.http.request(&path).await
     }
 }

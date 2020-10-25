@@ -113,6 +113,6 @@ impl Client {
             kind,
         };
         let path = route.path();
-        deref_mut!(self.http).request(&path).await
+        self.http.request(&path).await
     }
 }

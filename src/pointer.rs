@@ -9,7 +9,13 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[cfg(not(feature = "threadsafe"))]
-pub(crate) type Pointer<T> = Rc<RefCell<T>>;
+pub(crate) type Pointer<T> = Rc<T>;
 
 #[cfg(feature = "threadsafe")]
-pub(crate) type Pointer<T> = Arc<RwLock<T>>;
+pub(crate) type Pointer<T> = Arc<T>;
+
+#[cfg(not(feature = "threadsafe"))]
+pub(crate) type Cell<T> = RefCell<T>;
+
+#[cfg(feature = "threadsafe")]
+pub(crate) type Cell<T> = RwLock<T>;

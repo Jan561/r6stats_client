@@ -6,6 +6,7 @@ pub mod ratelimit;
 pub use self::ratelimit::Ratelimit;
 
 use self::error::{unsuccessful_request, url_error};
+use crate::pointer::Cell;
 use crate::Error;
 use reqwest::{Client, ClientBuilder, Method, Response, StatusCode, Url};
 use std::fmt::{self, Debug, Formatter};
@@ -13,7 +14,7 @@ use std::fmt::{self, Debug, Formatter};
 pub(crate) struct Http {
     client: Client,
     token: String,
-    ratelimit: Ratelimit,
+    ratelimit: Cell<Ratelimit>,
 }
 
 impl Http {
@@ -30,18 +31,18 @@ impl Http {
         Ok(Self {
             client,
             token,
-            ratelimit,
+            ratelimit: Cell::new(ratelimit),
         })
     }
 
-    pub fn ratelimit(&self) -> &Ratelimit {
-        &self.ratelimit
+    pub async fn ratelimit(&self) -> Ratelimit {
+        deref!(self.ratelimit).clone()
     }
 
-    pub async fn request(&mut self, path: &str) -> Result<Response, Error> {
+    pub async fn request(&self, path: &str) -> Result<Response, Error> {
         let url = Url::parse(path).map_err(|e| url_error(path, e))?;
 
-        self.ratelimit.pre_hook().await?;
+        deref_mut!(self.ratelimit).pre_hook().await?;
 
         let response = self
             .client
