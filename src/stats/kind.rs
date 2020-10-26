@@ -21,3 +21,17 @@ impl Kind {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Kind;
+
+    #[test]
+    fn test_kind_for_api() {
+        assert_eq!(Kind::Generic.as_str(), "generic");
+        assert_eq!(Kind::Seasonal.as_str(), "seasonal");
+        assert_eq!(Kind::Operators.as_str(), "operators");
+        assert_eq!(Kind::WeaponCategories.as_str(), "weapon-categories");
+        assert_eq!(Kind::Weapons.as_str(), "weapons");
+    }
+}

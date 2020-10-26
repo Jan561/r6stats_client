@@ -15,8 +15,8 @@ impl RouteBuilder {
         Self::default()
     }
 
-    pub fn username(mut self, username: String) -> Self {
-        self.username = Some(username);
+    pub fn username(mut self, username: &str) -> Self {
+        self.username = Some(username.to_string());
         self
     }
 
@@ -65,5 +65,26 @@ impl RouteInfo {
             p = self.platform.as_str(),
             k = self.kind.as_str()
         )
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::{Kind, RouteBuilder};
+    use crate::Platform;
+
+    #[test]
+    fn test_routing() {
+        let username = "pengu.g2";
+        let platform = Platform::Pc;
+        let kind = Kind::Generic;
+
+        let route = RouteBuilder::new()
+            .username(username)
+            .platform(platform)
+            .kind(kind)
+            .build()
+            .unwrap();
+
+        assert_eq!(route.path(), api!("/stats/pengu.g2/pc/generic"));
     }
 }

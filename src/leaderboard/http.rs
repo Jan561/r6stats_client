@@ -47,3 +47,26 @@ impl RouteInfo {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::RouteBuilder;
+    use crate::{Platform, Region};
+
+    #[test]
+    fn test_routing_all_regions() {
+        let route = RouteBuilder::new().platform(Platform::Pc).build();
+
+        assert_eq!(route.path(), api!("/leaderboard/pc/all"));
+    }
+
+    #[test]
+    fn test_routing_with_region() {
+        let route = RouteBuilder::new()
+            .platform(Platform::Pc)
+            .region(Some(Region::Apac))
+            .build();
+
+        assert_eq!(route.path(), api!("/leaderboard/pc/apac"));
+    }
+}

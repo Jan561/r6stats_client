@@ -107,7 +107,7 @@ impl Client {
         kind: Kind,
     ) -> Result<Response, Error> {
         let route = RouteBuilder::new()
-            .username(username.to_string())
+            .username(username)
             .platform(platform)
             .kind(kind)
             .build()?;

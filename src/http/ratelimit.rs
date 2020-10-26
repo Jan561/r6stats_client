@@ -131,3 +131,43 @@ impl Default for Ratelimit {
         RatelimitBuilder::new().build()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::http::{Ratelimit, RatelimitBuilder};
+    use tokio::time::{Duration, Instant};
+
+    #[test]
+    fn test_default_ratelimit() {
+        let r = Ratelimit::default();
+
+        assert_eq!(r.limit(), 60);
+        assert_eq!(r.remaining(), 60);
+        assert_eq!(r.interval(), Duration::from_secs(60));
+        assert!(r.reset_in().is_none());
+    }
+
+    #[tokio::test]
+    async fn test_ratelimiting() {
+        let mut r = RatelimitBuilder::new()
+            .limit(3)
+            .interval(Duration::from_secs(3))
+            .build();
+
+        for i in 0..r.limit() {
+            r.pre_hook().await.unwrap();
+            assert_eq!(r.remaining(), r.limit() - i - 1);
+        }
+
+        let reset_at = r.reset_at();
+
+        r.pre_hook().await.unwrap();
+
+        assert!(Instant::now().checked_duration_since(reset_at).is_some());
+
+        r.pre_hook().await.unwrap();
+
+        assert_eq!(r.remaining(), r.limit() - 1);
+        assert!(r.reset_in().is_some());
+    }
+}

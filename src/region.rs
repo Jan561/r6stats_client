@@ -22,3 +22,15 @@ impl Region {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Region;
+
+    #[test]
+    fn test_region_for_api() {
+        assert_eq!(Region::Ncsa.as_str(), "ncsa");
+        assert_eq!(Region::Emea.as_str(), "emea");
+        assert_eq!(Region::Apac.as_str(), "apac");
+    }
+}
