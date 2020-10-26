@@ -21,7 +21,7 @@ async fn main() {
     let token = "<API KEY HERE>";
     let client = Client::new(token);
 
-    let leaderboard = client.leaderboard().get(Platform::Pc, Region::Emea).await.unwrap();
+    let leaderboard = client.leaderboard().get(Platform::Pc, Some(Region::Emea)).await.unwrap();
     
     println!("{:#?}", leaderboard);
 }
