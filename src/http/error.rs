@@ -1,5 +1,7 @@
 use crate::Error as CrateError;
 use reqwest::{Error as ReqwestError, StatusCode};
+use std::error::Error as StdError;
+use std::fmt::{self, Display, Formatter};
 use url::ParseError;
 
 /// Errors related to HTTP.
@@ -52,11 +54,37 @@ impl From<ReqwestError> for Error {
     }
 }
 
+impl StdError for Error {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match self.kind {
+            Kind::UnsuccessfulRequest(_) => None,
+            Kind::UrlError(ref err) => Some(err),
+            Kind::RequestError(ref err) => Some(err),
+        }
+    }
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        fmt::Display::fmt(&self.kind, f)
+    }
+}
+
 #[derive(Debug)]
 enum Kind {
     UnsuccessfulRequest(StatusCode),
     UrlError(ParseError),
     RequestError(ReqwestError),
+}
+
+impl Display for Kind {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match *self {
+            Self::UnsuccessfulRequest(status) => write!(f, "Unsuccessful request: {}", status),
+            Self::UrlError(ref err) => write!(f, "Url error: {}", err),
+            Self::RequestError(ref err) => write!(f, "Request Error: {}", err),
+        }
+    }
 }
 
 pub(crate) fn unsuccessful_request(url: &str, status: StatusCode) -> CrateError {

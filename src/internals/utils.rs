@@ -2,10 +2,15 @@ use crate::Error;
 use serde::{Deserialize, Deserializer};
 
 pub fn check_username(username: &str) -> Result<(), Error> {
-    if username.contains('/') {
-        Err(Error::UsernameMalformed)
-    } else {
+    const ALLOWED_SPECIAL_CHARS: &str = ".-_";
+
+    if username
+        .chars()
+        .all(|c| c.is_alphanumeric() || ALLOWED_SPECIAL_CHARS.contains(c))
+    {
         Ok(())
+    } else {
+        Err(Error::UsernameMalformed)
     }
 }
 
@@ -33,9 +38,11 @@ mod tests {
     fn test_check_username() {
         let valid = "pengu.g2";
         let invalid = "pengu.g2/pc/generic";
+        let invalid_2 = "pengu g2";
 
         assert!(check_username(valid).is_ok());
         assert!(check_username(invalid).is_err());
+        assert!(check_username(invalid_2).is_err());
     }
 
     #[test]

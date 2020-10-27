@@ -7,7 +7,7 @@ use crate::leaderboard::Client as LeaderboardClient;
 use crate::stats::Client as StatsClient;
 use crate::{Error, Http};
 
-/// Client for the R6Stats-API.
+/// Client for the r6stats API.
 ///
 /// Use this client to send authenticated requests to the r6stats-api.
 ///

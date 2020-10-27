@@ -29,10 +29,4 @@ async fn main() {
 }
 ```
 
-## Features
-
-- `ratelimiting` (default): Enables pre-ratelimiting **before** sending requests to prevent HTTP-429 Errors.
-**Note**: Ratelimits are enforced by the server nevertheless.
-- `threadsafe`: Makes `Client` threadsafe (`Send` + `Sync`)
-
 [R6Stats]: https://r6stats.com

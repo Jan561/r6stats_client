@@ -29,7 +29,9 @@
 //!
 //! - `ratelimiting` (default): Enables pre-ratelimiting **before** sending requests to prevent HTTP-429 Errors.
 //! **Note**: Ratelimits are enforced by the server nevertheless.
-//! - `threadsafe`: Makes `Client` threadsafe (`Send` + `Sync`)
+//! - `threadsafe`: Makes [`Client`] threadsafe (`Send` + `Sync`)
+//!
+//! [`Client`]: client/struct.Client.html
 
 #[macro_use]
 pub(crate) mod internals;
