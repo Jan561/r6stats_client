@@ -8,7 +8,7 @@ async fn main() {
 
     let stats = client
         .stats()
-        .seasonal("pengu.g2", Platform::Pc)
+        .generic("pengu.g2", Platform::Pc)
         .await
         .expect("Error fetching stats.");
     println!("{:#?}", stats);
