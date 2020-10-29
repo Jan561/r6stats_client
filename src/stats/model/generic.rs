@@ -1,5 +1,9 @@
 //! Module for generic stats.
 
+mod queue_mode;
+
+pub use self::queue_mode::QueueMode;
+
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -79,19 +83,6 @@ pub struct GeneralStatsInfo {
     pub suicides: u16,
     pub wins: u16,
     pub wl: f32,
-}
-
-/// The queue mode.
-#[derive(Deserialize, Copy, Clone, Debug, PartialEq, Eq, Hash)]
-#[serde(rename_all = "snake_case")]
-#[non_exhaustive]
-pub enum QueueMode {
-    /// Casual Queue
-    Casual,
-    /// Ranked Queue
-    Ranked,
-    /// Unranked Queue and other
-    Other,
 }
 
 /// Deserialized info for the [`QueueMode`].

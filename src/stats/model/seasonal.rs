@@ -1,171 +1,19 @@
 //! Module for seasonal stats.
 
+mod match_result;
+mod rank;
+mod season;
+
+pub use self::match_result::MatchResult;
+pub use self::rank::Rank;
+pub use self::season::Season;
+
 use crate::internals::utils::serde_parse_f64_option;
 use crate::region::Region;
 use chrono::{DateTime, NaiveDate, Utc};
 use int_enum::IntEnum;
 use serde::{Deserialize, Deserializer};
-use serde_repr::Deserialize_repr;
 use std::collections::HashMap;
-
-/// The rank of the player.
-#[derive(Deserialize_repr, Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[repr(u8)]
-pub enum Rank {
-    // Unranked
-    Unranked = 0,
-
-    //Copper
-    CopperV = 1,
-    CopperIV = 2,
-    CopperIII = 3,
-    CopperII = 4,
-    CopperI = 5,
-
-    // Bronze
-    BronzeV = 6,
-    BronzeIV = 7,
-    BronzeIII = 8,
-    BronzeII = 9,
-    BronzeI = 10,
-
-    // Silver
-    SilverV = 11,
-    SilverIV = 12,
-    SilverIII = 13,
-    SilverII = 14,
-    SilverI = 15,
-
-    // Gold
-    GoldIII = 16,
-    GoldII = 17,
-    GoldI = 18,
-
-    // Platinum
-    PlatinumIII = 19,
-    PlatinumII = 20,
-    PlatinumI = 21,
-
-    // Diamond+
-    Diamond = 22,
-    Champions = 23,
-}
-
-impl Rank {
-    /// Returns true if [`Rank`] is unranked.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_unranked(self) -> bool {
-        Self::Unranked == self
-    }
-
-    /// Returns true if [`Rank`] is copper.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_copper(self) -> bool {
-        matches!(
-            self,
-            Self::CopperI | Self::CopperII | Self::CopperIII | Self::CopperIV | Self::CopperV
-        )
-    }
-
-    /// Returns true if [`Rank`] is bronze.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_bronze(self) -> bool {
-        matches!(
-            self,
-            Self::BronzeI | Self::BronzeII | Self::BronzeIII | Self::BronzeIV | Self::BronzeV
-        )
-    }
-
-    /// Returns true if [`Rank`] is silver.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_silver(self) -> bool {
-        matches!(
-            self,
-            Self::SilverI | Self::SilverII | Self::SilverIII | Self::SilverIV | Self::SilverV
-        )
-    }
-
-    /// Returns true if [`Rank`] is gold.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_gold(self) -> bool {
-        matches!(self, Self::GoldI | Self::GoldII | Self::GoldIII)
-    }
-
-    /// Returns true if [`Rank`] is platinum.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_platinum(self) -> bool {
-        matches!(self, Self::PlatinumI | Self::PlatinumII | Self::PlatinumIII)
-    }
-
-    /// Returns true if [`Rank`] is diamond.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_diamond(self) -> bool {
-        Self::Diamond == self
-    }
-
-    /// Returns true if [`Rank`] is champion.
-    ///
-    /// [`Rank`]: struct.Rank.html
-    pub fn is_champion(self) -> bool {
-        Self::Champions == self
-    }
-}
-
-/// All seasons available in the api.
-#[derive(IntEnum, Deserialize, Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[serde(rename_all = "snake_case")]
-#[non_exhaustive]
-#[repr(u8)]
-pub enum Season {
-    // Year 2
-    Health = 6,
-    BloodOrchid = 7,
-    WhiteNoise = 8,
-
-    // Year 3
-    Chimera = 9,
-    ParaBellum = 10,
-    GrimSky = 11,
-    WindBastion = 12,
-
-    // Year 4
-    BurntHorizon = 13,
-    PhantomSight = 14,
-    EmberRise = 15,
-    ShiftingTides = 16,
-
-    // Year 5
-    VoidEdge = 17,
-    SteelWave = 18,
-    ShadowLegacy = 19,
-
-    /// For new seasons not yet implemented in this client.
-    #[serde(other)]
-    Unknown = 20,
-}
-
-impl Season {
-    pub const fn current_season() -> Self {
-        Self::ShadowLegacy
-    }
-}
-
-/// The match result.
-#[derive(Deserialize_repr, Copy, Clone, Debug)]
-#[repr(u8)]
-pub enum MatchResult {
-    NotAvailable = 0,
-    Win = 1,
-    Loss = 2,
-    Abandoned = 3,
-}
 
 /// Deserialized seasonal stats.
 #[derive(Deserialize, Clone, Debug)]
