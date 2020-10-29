@@ -24,5 +24,5 @@ async fn main() {
     // Preratelimited. Request on hold until next ratelimit interval
     let _ = client.leaderboard().get(Platform::Pc, None).await;
 
-    println!("Finished 121st request.");
+    println!("Finished 121st request");
 }
