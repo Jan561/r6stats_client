@@ -33,8 +33,8 @@ pub struct OperatorInfo {
     pub headshots: u32,
     pub dbnos: u32,
     pub melee_kills: u16,
-    pub experience: usize,
-    pub playtime: usize,
+    pub experience: u64,
+    pub playtime: u64,
     pub abilities: Option<Vec<AbilityInfo>>,
     pub badge_image: Option<String>,
 }

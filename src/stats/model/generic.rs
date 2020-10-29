@@ -1,7 +1,7 @@
 //! Module for generic stats.
 
 use chrono::{DateTime, Utc};
-use serde::Deserialize;
+use serde::{Deserialize, Deserializer};
 use std::collections::HashMap;
 
 /// Deserialized generic stats.
@@ -54,11 +54,12 @@ pub struct GeneralStatsInfo {
     pub assists: u32,
     pub barricades_deployed: u16,
     pub blind_kills: u16,
-    pub bullets_fired: usize,
-    pub bullets_hit: usize,
+    pub bullets_fired: u64,
+    pub bullets_hit: u64,
     pub dbnos: u32,
     pub deaths: u32,
-    pub distance_travelled: isize,
+    #[serde(deserialize_with = "deserialize_distance")]
+    pub distance_travelled: Option<u64>,
     pub draws: u16,
     pub gadgets_destroyed: u32,
     pub games_played: u16,
@@ -68,13 +69,24 @@ pub struct GeneralStatsInfo {
     pub losses: u32,
     pub melee_kills: u16,
     pub penetration_kills: u16,
-    pub playtime: usize,
+    pub playtime: u64,
     pub rappel_breaches: u16,
     pub reinforcements_deployed: u16,
     pub revives: u16,
     pub suicides: u16,
     pub wins: u16,
     pub wl: f32,
+}
+
+fn deserialize_distance<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<u64>, D::Error> {
+    let distance = i64::deserialize(deserializer)?;
+    if distance < 0 {
+        Ok(None)
+    } else {
+        Ok(Some(distance as u64))
+    }
 }
 
 /// The queue mode.
@@ -102,7 +114,7 @@ pub struct QueueInfo {
     pub kd: f32,
     pub kills: u32,
     pub losses: u16,
-    pub playtime: usize,
+    pub playtime: u64,
     pub wins: u16,
     pub wl: f32,
 }
@@ -122,7 +134,7 @@ pub struct BombInfo {
     pub best_score: u16,
     pub games_played: u16,
     pub losses: u16,
-    pub playtime: usize,
+    pub playtime: u64,
     pub wins: u16,
     pub wl: f32,
 }
@@ -136,7 +148,7 @@ pub struct SecureAreaInfo {
     pub kills_as_attacker_in_objective: u32,
     pub kills_as_defender_in_objective: u32,
     pub losses: u16,
-    pub playtime: usize,
+    pub playtime: u64,
     pub times_objective_secured: u16,
     pub wins: u16,
     pub wl: f32,
@@ -149,7 +161,7 @@ pub struct HostageInfo {
     pub best_score: u16,
     pub games_played: u16,
     pub losses: u16,
-    pub playtime: usize,
+    pub playtime: u64,
     pub extractions_denied: u16,
     pub wins: u16,
     pub wl: f32,

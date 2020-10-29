@@ -28,8 +28,8 @@ pub struct CategoriesInfo {
     pub headshots: u32,
     pub headshot_percentage: f32,
     pub times_chosen: u32,
-    pub bullets_fired: usize,
-    pub bullets_hit: usize,
+    pub bullets_fired: u64,
+    pub bullets_hit: u64,
     pub created: DateTime<Utc>,
     pub last_updated: DateTime<Utc>,
 }
