@@ -1,7 +1,7 @@
 //! Module for generic stats.
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Deserializer};
+use serde::Deserialize;
 use std::collections::HashMap;
 
 /// Deserialized generic stats.
@@ -60,9 +60,9 @@ pub struct GeneralStatsInfo {
     pub deaths: u32,
     /// The travelled distance.
     ///
-    /// None, if the api returned a negative number.
-    #[serde(deserialize_with = "deserialize_distance")]
-    pub distance_travelled: Option<u64>,
+    /// Note, that this value can overflow (more than once)
+    /// because the player travelled more than ubisoft expected.
+    pub distance_travelled: i32,
     pub draws: u16,
     pub gadgets_destroyed: u32,
     pub games_played: u16,
@@ -79,17 +79,6 @@ pub struct GeneralStatsInfo {
     pub suicides: u16,
     pub wins: u16,
     pub wl: f32,
-}
-
-fn deserialize_distance<'de, D: Deserializer<'de>>(
-    deserializer: D,
-) -> Result<Option<u64>, D::Error> {
-    let distance = i64::deserialize(deserializer)?;
-    if distance < 0 {
-        Ok(None)
-    } else {
-        Ok(Some(distance as u64))
-    }
 }
 
 /// The queue mode.
