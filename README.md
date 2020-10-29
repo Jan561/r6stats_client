@@ -29,4 +29,7 @@ async fn main() {
 }
 ```
 
+More examples can be found in the [examples] directory.
+
 [R6Stats]: https://r6stats.com
+[examples]: https://github.com/Jan561/r6stats_client/tree/master/examples

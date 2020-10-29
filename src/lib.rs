@@ -25,16 +25,19 @@
 //! }
 //! ```
 //!
+//! More examples can be found in the [examples] directory.
+//!
 //! ## Features
 //!
 //! - `ratelimiting` (default): Enables pre-ratelimiting **before** sending requests to prevent HTTP-429 Errors.
-//! **Note**: Ratelimits are enforced by the server nevertheless.
+//! **Note**: Ratelimits are enforced by the server either way.
 //! - `threadsafe`: Makes [`Client`] threadsafe (`Send` + `Sync`)
 //!
+//! [examples]: https://github.com/Jan561/r6stats_client/tree/master/examples
 //! [`Client`]: client/struct.Client.html
 
 #[macro_use]
-pub(crate) mod internals;
+mod internals;
 
 pub mod http;
 pub mod leaderboard;
@@ -50,4 +53,4 @@ pub use crate::error::Error;
 pub use crate::platform::Platform;
 pub use crate::region::Region;
 
-pub(crate) use crate::http::Http;
+use crate::http::Http;
