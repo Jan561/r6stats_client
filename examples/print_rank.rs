@@ -11,7 +11,7 @@ async fn main() {
         .stats()
         .seasonal("pengu.g2", Platform::Pc)
         .await
-        .expect("Error getting stats.");
+        .expect("Error getting stats");
 
     let rank = seasonal_stats
         .seasons
@@ -19,7 +19,7 @@ async fn main() {
         .and_then(|s| s.regions.get(&Region::Emea))
         .and_then(|r| r.get(0))
         .map(|r| r.rank_text.clone())
-        .expect("Couldn't get rank of current season.");
+        .expect("Couldn't get rank of current season");
 
     println!("{}", rank);
 }

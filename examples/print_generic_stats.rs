@@ -10,7 +10,7 @@ async fn main() {
         .stats()
         .generic("pengu.g2", Platform::Pc)
         .await
-        .expect("Error fetching stats");
+        .expect("Error getting stats");
 
     println!("{:#?}", stats);
 }
