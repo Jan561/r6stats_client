@@ -58,6 +58,9 @@ pub struct GeneralStatsInfo {
     pub bullets_hit: u64,
     pub dbnos: u32,
     pub deaths: u32,
+    /// The travelled distance.
+    ///
+    /// None, if the api returned a negative number.
     #[serde(deserialize_with = "deserialize_distance")]
     pub distance_travelled: Option<u64>,
     pub draws: u16,
