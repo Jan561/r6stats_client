@@ -7,7 +7,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-r6stats_client = "0.1"
+r6stats_client = "0.2"
 ```
 Basic example:
 ```rust

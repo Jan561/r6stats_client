@@ -24,8 +24,14 @@ impl Client {
     /// - `platform` - The [`Platform`] of the player
     ///
     /// [`Platform`]: ../../platform/enum.Platform.html
-    pub async fn generic(&self, username: &str, platform: Platform) -> Result<GenericStats, Error> {
-        let response = self.request(username, platform, Kind::Generic).await?;
+    pub async fn generic(
+        &self,
+        username: impl AsRef<str>,
+        platform: Platform,
+    ) -> Result<GenericStats, Error> {
+        let response = self
+            .request(username.as_ref(), platform, Kind::Generic)
+            .await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
     }
@@ -40,10 +46,12 @@ impl Client {
     /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn seasonal(
         &self,
-        username: &str,
+        username: impl AsRef<str>,
         platform: Platform,
     ) -> Result<SeasonalStats, Error> {
-        let response = self.request(username, platform, Kind::Seasonal).await?;
+        let response = self
+            .request(username.as_ref(), platform, Kind::Seasonal)
+            .await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
     }
@@ -58,10 +66,12 @@ impl Client {
     /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn operators(
         &self,
-        username: &str,
+        username: impl AsRef<str>,
         platform: Platform,
     ) -> Result<OperatorStats, Error> {
-        let response = self.request(username, platform, Kind::Operators).await?;
+        let response = self
+            .request(username.as_ref(), platform, Kind::Operators)
+            .await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
     }
@@ -76,11 +86,11 @@ impl Client {
     /// [`Platform`]: ../../platform/enum.Platform.html
     pub async fn weapon_categories(
         &self,
-        username: &str,
+        username: impl AsRef<str>,
         platform: Platform,
     ) -> Result<WeaponCategoryStats, Error> {
         let response = self
-            .request(username, platform, Kind::WeaponCategories)
+            .request(username.as_ref(), platform, Kind::WeaponCategories)
             .await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
@@ -94,8 +104,14 @@ impl Client {
     /// - `platform` - The [`Platform`] of the player
     ///
     /// [`Platform`]: ../../platform/enum.Platform.html
-    pub async fn weapons(&self, username: &str, platform: Platform) -> Result<WeaponStats, Error> {
-        let response = self.request(username, platform, Kind::Weapons).await?;
+    pub async fn weapons(
+        &self,
+        username: impl AsRef<str>,
+        platform: Platform,
+    ) -> Result<WeaponStats, Error> {
+        let response = self
+            .request(username.as_ref(), platform, Kind::Weapons)
+            .await?;
         let bytes = response.bytes().await?;
         Ok(serde_json::from_slice(&bytes)?)
     }

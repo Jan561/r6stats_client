@@ -51,9 +51,9 @@ impl Client {
     /// # Args
     ///
     /// - `token` - The API key for authentication with the endpoint
-    pub fn new(token: &str) -> Result<Self, Error> {
+    pub fn new(token: impl AsRef<str>) -> Result<Self, Error> {
         Self::_new(
-            token,
+            token.as_ref(),
             #[cfg(feature = "ratelimiting")]
             Ratelimit::default(),
         )
@@ -68,14 +68,14 @@ impl Client {
     ///
     /// [`Ratelimit`]: http/ratelimit/struct.Ratelimit.html
     #[cfg(feature = "ratelimiting")]
-    pub fn with_ratelimit<F>(token: &str, op: F) -> Result<Self, Error>
+    pub fn with_ratelimit<F>(token: impl AsRef<str>, op: F) -> Result<Self, Error>
     where
         F: FnOnce(RatelimitBuilder) -> RatelimitBuilder,
     {
         let builder = op(RatelimitBuilder::new());
         let ratelimit = builder.build();
 
-        Self::_new(token, ratelimit)
+        Self::_new(token.as_ref(), ratelimit)
     }
 
     /// Returns the client for requests to the stats endpoint.
