@@ -84,3 +84,33 @@ impl Debug for Http {
         d.finish()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{Http, Ratelimit};
+
+    #[test]
+    fn test_token_formatting() {
+        let expected = "ABC";
+        let tokens = ["ABC", "  ABC  ", "Bearer ABC", "  Bearer ABC "];
+
+        for &token in tokens.iter() {
+            let http = Http::new(token, Ratelimit::default()).unwrap();
+            assert_eq!(http.token, expected);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_request() {
+        let http = Http::new("", Ratelimit::default()).unwrap();
+
+        let _ = http
+            .request("https://httpbin.org/status/200")
+            .await
+            .unwrap();
+        let _ = http
+            .request("https://httpbin.org/status/404")
+            .await
+            .unwrap_err();
+    }
+}

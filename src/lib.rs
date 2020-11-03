@@ -3,7 +3,7 @@
 //! This crate provides a client for the r6stats API. It supports the `/stats` and the `/leaderboard` endpoint.
 //!
 //! ## Example
-//! ```rust,ignore
+//! ```rust
 //! use r6stats_client::{Client, Platform, Region};
 //! use std::env;
 //!
@@ -13,6 +13,7 @@
 //!     //
 //!     // If you don't have one, you can request one from their support.
 //!     let token = "<API KEY HERE>";
+//!     # let token = std::env::var("R6STATS_TOKEN").unwrap();
 //!     let client = Client::new(token).unwrap();
 //!
 //!     let leaderboard = client

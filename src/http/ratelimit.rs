@@ -108,8 +108,8 @@ impl Ratelimit {
         let delay = match self.reset_in() {
             Some(delay) => delay,
             None => {
-                self.remaining = self.limit - 1;
-                self.reset_at = Instant::now() + self.interval;
+                self.reset();
+                self.remaining -= 1;
 
                 return Ok(());
             }
@@ -124,6 +124,11 @@ impl Ratelimit {
 
         Ok(())
     }
+
+    fn reset(&mut self) {
+        self.reset_at = Instant::now() + self.interval;
+        self.remaining = self.limit;
+    }
 }
 
 impl Default for Ratelimit {
@@ -137,8 +142,10 @@ mod tests {
     use crate::http::{Ratelimit, RatelimitBuilder};
     use tokio::time::{Duration, Instant};
 
-    #[test]
-    fn test_default_ratelimit() {
+    const NO_LIMIT_TEST_CAP: usize = 100;
+
+    #[tokio::test]
+    async fn test_default_ratelimit() {
         let r = Ratelimit::default();
 
         assert_eq!(r.limit(), 60);
@@ -149,18 +156,27 @@ mod tests {
 
     #[tokio::test]
     async fn test_ratelimiting() {
+        // Limit of 3 requests in 3 seconds
         let mut r = RatelimitBuilder::new()
             .limit(3)
             .interval(Duration::from_secs(3))
             .build();
+
+        // Initial reset
+        r.reset();
+
+        // Save reset_at to assert that following requests pass
+        let reset_at = r.reset_at();
 
         for i in 0..r.limit() {
             r.pre_hook().await.unwrap();
             assert_eq!(r.remaining(), r.limit() - i - 1);
         }
 
-        let reset_at = r.reset_at();
+        // Check if wrong ratelimited
+        assert_eq!(reset_at, r.reset_at());
 
+        // Next request should get ratelimited
         r.pre_hook().await.unwrap();
 
         assert!(Instant::now().checked_duration_since(reset_at).is_some());
@@ -169,5 +185,20 @@ mod tests {
 
         assert_eq!(r.remaining(), r.limit() - 1);
         assert!(r.reset_in().is_some());
+    }
+
+    #[tokio::test]
+    async fn test_disabled_ratelimiting() {
+        let mut r = RatelimitBuilder::new().limit(0).build();
+
+        r.reset();
+
+        let reset_at = r.reset_at();
+
+        for _ in 0..NO_LIMIT_TEST_CAP {
+            r.pre_hook().await.unwrap();
+        }
+
+        assert_eq!(reset_at, r.reset_at());
     }
 }

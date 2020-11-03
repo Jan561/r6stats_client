@@ -13,12 +13,12 @@ async fn test_stats() {
         .unwrap();
     let _ = client
         .stats()
-        .seasonal("pengu.g2", Platform::Pc)
+        .seasonal("i jefe l", Platform::Xbox)
         .await
         .unwrap();
     let _ = client
         .stats()
-        .operators("pengu.g2", Platform::Pc)
+        .operators("WhyGunner", Platform::Playstation)
         .await
         .unwrap();
     let _ = client

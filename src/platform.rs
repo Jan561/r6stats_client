@@ -16,15 +16,3 @@ impl Platform {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::Platform;
-
-    #[test]
-    fn test_platform_for_api() {
-        assert_eq!(Platform::Pc.as_str(), "pc");
-        assert_eq!(Platform::Xbox.as_str(), "xbox");
-        assert_eq!(Platform::Playstation.as_str(), "ps4");
-    }
-}
