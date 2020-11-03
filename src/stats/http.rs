@@ -39,7 +39,7 @@ impl RouteBuilder {
             .expect("Error creating route: Platform missing.");
         let kind = self.kind.expect("Error creating route: Kind missing.");
 
-        check_username(&username, platform)?;
+        check_username(&username)?;
 
         let route = RouteInfo {
             username,
