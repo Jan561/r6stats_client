@@ -11,6 +11,8 @@ r6stats_client = "0.2"
 ```
 Basic example:
 ```rust
+use r6stats_client::{Client, Platform, Region};
+
 #[tokio::main]
 async fn main() {
     // You need an API key to access the endpoints of r6stats.
