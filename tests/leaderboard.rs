@@ -1,4 +1,4 @@
-use r6stats_client::{Client, Platform};
+use r6stats_client::{Client, Platform, Region};
 use std::env;
 
 #[tokio::test]
@@ -9,12 +9,17 @@ async fn test_leaderboard() {
     let _ = client.leaderboard().get(Platform::Pc, None).await.unwrap();
     let _ = client
         .leaderboard()
-        .get(Platform::Xbox, None)
+        .get(Platform::Xbox, Some(Region::Emea))
         .await
         .unwrap();
     let _ = client
         .leaderboard()
-        .get(Platform::Playstation, None)
+        .get(Platform::Playstation, Some(Region::Apac))
+        .await
+        .unwrap();
+    let _ = client
+        .leaderboard()
+        .get(Platform::Pc, Some(Region::Ncsa))
         .await
         .unwrap();
 }
